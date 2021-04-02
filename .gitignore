@@ -3,3 +3,4 @@ node_modules
 db
 experiment.csv
 package-lock.json
+logs
