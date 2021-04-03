@@ -20,6 +20,8 @@ class Database {
       );
       return this;
     };
+
+    this.#users.find({_id: 10}, {}, console.log)
   }
 
   registerUser(data) {
@@ -43,7 +45,7 @@ class Database {
   }
 
   setUserExperimentData({id, poll, test}) {
-    this.#users.update({_id: id}, {poll, test});
+    this.#users.update({_id: id}, {$set: {poll, test}}, {multi: true, upset: true});
   }
 }
 
