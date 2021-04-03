@@ -36,7 +36,7 @@ class Server {
       ]
     });
     const options = {
-      folderPath: './logs',
+      folderPath: settings.getPath('/logs/'),
       dateBasedFileNaming: false,
       fileName: 'All_Logs.log',
       dateFormat: 'YYYY_MM_D',
@@ -44,6 +44,7 @@ class Server {
     }
 
     this.logger = require('node-file-logger');
+    this.logger.SetUserOptions(options)
 
   }
 
