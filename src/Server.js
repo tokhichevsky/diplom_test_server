@@ -120,7 +120,7 @@ class Server {
   }
 
   start() {
-    console.log(__dirname)
+    console.log(settings.getPath("/"))
     this.#server.listen(this.port, () => console.log(`Server has been started on port ${this.port}. + pg2`));
   }
 }
