@@ -1,4 +1,5 @@
 const Datastore = require("nedb");
+const settings = require("../settings");
 
 class Database {
   #users;
@@ -6,8 +7,8 @@ class Database {
   #functions;
 
   constructor() {
-    this.#users = new Datastore({filename: "./db/users", autoload: true});
-    this.#functions = new Datastore({filename: "./db/functions", autoload: true});
+    this.#users = new Datastore({filename: settings.getPath("/db/users"), autoload: true});
+    this.#functions = new Datastore({filename: settings.getPath("/db/functions"), autoload: true});
 
     this.#functions.getAutoId = function (onFind) {
       this.update(

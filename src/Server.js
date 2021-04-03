@@ -4,6 +4,7 @@ const cors = require("cors");
 const Database = require("./Database");
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 const bodyParser = require("body-parser");
+const settings = require("../settings");
 
 
 class Server {
@@ -35,7 +36,7 @@ class Server {
       ]
     });
     const options = {
-      folderPath: './logs/',
+      folderPath: settings.getPath('/logs/'),
       dateBasedFileNaming: false,
       fileName: 'All_Logs.log',
       dateFormat: 'YYYY_MM_D',
