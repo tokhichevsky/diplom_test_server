@@ -36,7 +36,7 @@ class Server {
       ]
     });
     const options = {
-      folderPath: settings.getPath('/logs/'),
+      folderPath: './logs',
       dateBasedFileNaming: false,
       fileName: 'All_Logs.log',
       dateFormat: 'YYYY_MM_D',
