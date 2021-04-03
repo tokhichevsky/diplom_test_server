@@ -6,8 +6,8 @@ class Database {
   #functions;
 
   constructor() {
-    this.#users = new Datastore({filename: "db/users", autoload: true});
-    this.#functions = new Datastore({filename: "db/functions", autoload: true});
+    this.#users = new Datastore({filename: "./db/users", autoload: true});
+    this.#functions = new Datastore({filename: "./db/functions", autoload: true});
 
     this.#functions.getAutoId = function (onFind) {
       this.update(
