@@ -119,7 +119,7 @@ class Server {
   }
 
   start() {
-    console.log(process.env.NODE_PATH)
+    console.log(__dirname)
     this.#server.listen(this.port, () => console.log(`Server has been started on port ${this.port}. + pg2`));
   }
 }
