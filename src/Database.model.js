@@ -18,5 +18,6 @@ export const CSVFields = {
   visiting_concerts_frequency: "Частота посещения клубов\\концертов",
   music_listening_frequency: "Частота прослушивания музыки в наушниках",
   noise_level: "Уровень шума на рабочем месте",
+  title_pull: "Определение типа восприятия"
 };
 
