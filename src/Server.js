@@ -5,6 +5,9 @@ const Database = require("./Database");
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 const bodyParser = require("body-parser");
 const settings = require("../settings");
+const fs = require("fs");
+const {getRows} = require("./Server.model");
+const {CSVHeaders} = require("./Server.model");
 
 
 class Server {
@@ -18,33 +21,22 @@ class Server {
    */
   #database;
 
-  /**
-   * @type {CsvWriter}
-   */
-  #csvWriter;
-
   constructor(port, allowedOrigins) {
     this.port = port;
     this.initServer(allowedOrigins);
     this.initRoutes();
     this.#database = new Database();
-    this.#csvWriter = createCsvWriter({
-      path: "experiment.csv",
-      header: [
-        {id: "name", title: "NAME"},
-        {id: "lang", title: "LANGUAGE"}
-      ]
-    });
-    const options = {
-      folderPath: settings.getPath('/logs/'),
-      dateBasedFileNaming: false,
-      fileName: 'All_Logs.log',
-      dateFormat: 'YYYY_MM_D',
-      timeFormat: 'h:mm:ss A',
-    }
 
-    this.logger = require('node-file-logger');
-    this.logger.SetUserOptions(options)
+    const options = {
+      folderPath: settings.getPath("/logs/"),
+      dateBasedFileNaming: false,
+      fileName: "All_Logs.log",
+      dateFormat: "YYYY_MM_D",
+      timeFormat: "h:mm:ss A",
+    };
+
+    this.logger = require("node-file-logger");
+    this.logger.SetUserOptions(options);
 
   }
 
@@ -66,7 +58,6 @@ class Server {
     });
 
     if (allowedOrigins) {
-      console.log("asd")
       this.#server.use(cors({
         origin: function (origin, callback) {
           if (!origin) return callback(null, true);
@@ -82,29 +73,35 @@ class Server {
   }
 
   initRoutes() {
+    const filePath = settings.getPath("/experiment.csv");
     this.#server.get("/api/", (request, response) => {
       response.send("Туточки");
     });
 
     this.#server.get("/api/experiment.csv", (request, response) => {
-      const records = [
-        {name: "Bob", lang: "French, English"},
-        {name: "Mary", lang: "English"}
-      ];
-
-      this.#csvWriter.writeRecords(records)       // returns a promise
-        .then(() => {
-          response.setHeader("Content-disposition", "attachment; filename=experiment.csv");
-          response.setHeader("Content-type", "text/csv");
-          response.download("experiment.csv");
+      try {
+        fs.unlinkSync(filePath);
+        const csvWriter = createCsvWriter({
+          path: filePath,
+          header: CSVHeaders
         });
-    });
-
-    this.#server.post("/api/add/", (request, response) => {
-      console.log(request.body);
+        this.#database.getAllData().then(data => {
+          const records = getRows(data);
+          csvWriter.writeRecords(records)       // returns a promise
+            .then(() => {
+              response.setHeader("Content-disposition", "attachment; filename=experiment.csv");
+              response.setHeader("Content-type", "text/csv");
+              response.download("experiment.csv");
+            });
+        });
+      } catch (error) {
+        response.sendStatus(500);
+      }
     });
 
     this.#server.post("/api/user/register/", (request, response) => {
+      const {first_name, last_name, patronymic} = request.body;
+      console.log(first_name, last_name, patronymic);
       this.#database.registerUser(request.body).then((answer) => response.send(answer));
     });
 
@@ -115,13 +112,13 @@ class Server {
 
     this.#server.post("/api/log/", (request, response) => {
       this.logger.Info(request.body.text);
-      console.log(request.body.text)
+      console.log(request.body.text);
       response.sendStatus(200);
     });
   }
 
   start() {
-    console.log(settings.getPath("/"))
+    console.log(settings.getPath("/"));
     this.#server.listen(this.port, () => console.log(`Server has been started on port ${this.port}. + pg2`));
   }
 }
