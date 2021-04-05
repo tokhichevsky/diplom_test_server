@@ -94,7 +94,7 @@ class Server {
             .then(() => {
               response.setHeader("Content-disposition", "attachment; filename=experiment.csv");
               response.setHeader("Content-type", "text/csv");
-              response.download("experiment.csv");
+              response.download(filePath);
             });
         });
       } catch (error) {
