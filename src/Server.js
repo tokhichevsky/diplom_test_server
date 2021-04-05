@@ -80,7 +80,10 @@ class Server {
 
     this.#server.get("/api/experiment.csv", (request, response) => {
       try {
-        fs.unlinkSync(filePath);
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+
         const csvWriter = createCsvWriter({
           path: filePath,
           header: CSVHeaders
