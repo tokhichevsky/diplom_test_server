@@ -95,6 +95,7 @@ class Server {
             });
         });
       } catch (error) {
+        console.error(error)
         response.sendStatus(500);
       }
     });
