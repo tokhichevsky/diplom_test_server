@@ -72,6 +72,7 @@ const CSVFields = {
   //----
   title_stage_2: "Этап 2",
   title_stage_2_interval_26: "(26)",
+  metronom: "Метроном",
   stage_2_interval_26_estimate: "(26) Оценка",
   stage_2_interval_26_estimate_table_stat_correct: "(26) Оценка.Правильно решенные таблицы",
   stage_2_interval_26_estimate_table_stat_wrong: "(26) Оценка.Неправильно решенные таблицы",
@@ -252,7 +253,8 @@ module.exports.getRows = (data) => {
       ...pullResults,
       //---- [26, 38, 64, 101, 156, 179]
       title_test: "",
-      ...calculateTestStages(user.test)
+      ...calculateTestStages(user.test),
+      metronom: user._id % 2 === 0 ? 140 : 35,
     });
   });
 
