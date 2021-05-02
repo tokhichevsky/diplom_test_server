@@ -43,8 +43,32 @@ class Database {
     }));
   }
 
+  getPartialUpdateObject(data) {
+    const result = {};
+
+    for (const key of Object.keys(data)) {
+      let fullKey = key;
+
+      if (typeof data[key] === "object" && data[key] !== null) {
+        const nextObjectLevel = this.getPartialUpdateObject(data[key]);
+
+        for (const nextKey of Object.keys(nextObjectLevel)) {
+          result[`${key}.${nextKey}`] = nextObjectLevel[nextKey]
+        }
+      } else if (data[key] !== undefined) {
+        result[key] = data[key];
+      }
+    }
+
+    return result;
+  }
+
   setUserExperimentData({id, poll, test}) {
     this.#users.update({_id: id}, {$set: {poll, test}}, {multi: true, upset: true});
+  }
+
+  updateUserExperimentData({id, poll, test}) {
+    this.#users.update({_id: Number(id)}, {$set: this.getPartialUpdateObject({poll, test})}, {multi: true, upset: true});
   }
 
   getAllData() {

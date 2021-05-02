@@ -114,6 +114,11 @@ class Server {
       response.sendStatus(200);
     });
 
+    this.#server.patch("/api/user/experiment", (request, response) => {
+      this.#database.updateUserExperimentData(request.body);
+      response.sendStatus(200);
+    })
+
     this.#server.post("/api/log/", (request, response) => {
       this.logger.Info(request.body.text);
       console.log(request.body.text);
